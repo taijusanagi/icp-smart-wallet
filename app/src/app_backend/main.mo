@@ -8,7 +8,7 @@ import SHA256 "./utils/SHA256";
 
 actor {
   public query (message) func greet() : async Text {
-    return "Hello, " # Principal.toText(message.caller) # "!";
+    return Principal.toText(message.caller);
   };
 
   type IC = actor {

@@ -3,30 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>greet</title>
+    <title>ICP Smart Wallet</title>
     <base href="/" />
     <link rel="icon" href="favicon.ico" />
-    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" /> -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-gradient-to-r from-black to-purple-700 flex flex-col">
-    <header class="header">
-      <nav class="nav">
-        <ul class="nav-list flex justify-end p-4">
-          <li class="nav-item">
-            <button class="btn bg-white text-black py-2 px-4 rounded-lg">Connect Internet Identity</button>
-          </li>
-        </ul>
-      </nav>
-    </header>
     <main class="main-content flex-grow flex items-center justify-center p-2">
-      <div class="centered-form bg-white p-8 rounded-lg shadow-md">
-        <label class="form-label block text-gray-700 font-bold mb-2">Principle:</label>
-        <p class="mb-4">Your Principle Text</p>
-        <label class="form-label block text-gray-700 font-bold mb-2">Account Abstraction Address:</label>
-        <p class="mb-4">Your Account Abstraction Address Text</p>
-        <button class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
-          Send Account Abstraction Transaction
+      <div id="heroSection" class="hero flex flex-col items-center p-8 text-center">
+        <img src="logo.png" alt="Logo" class="mb-4 w-24 h-24 mx-auto" />
+        <h1 class="text-2xl font-bold mb-4 text-white">ICP Smart Wallet</h1>
+        <h2 class="text-xl font-semibold mb-4 text-white">Account Abstraction Wallet with Threshold ECDSA on ICP</h2>
+        <button id="login" class="btn bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 mx-auto">
+          Connect Internet Identity
         </button>
+      </div>
+      <div id="formSection">
+        <img src="logo.png" alt="Logo" class="mb-4 w-24 h-24 mx-auto" />
+        <h1 class="text-2xl font-bold mb-4 text-white text-center">ICP Smart Wallet</h1>
+        <div class="centered-form bg-white p-8 rounded-lg shadow-md">
+          <label class="form-label block text-gray-700 font-bold mb-2">Principle:</label>
+          <p class="mb-4 text-xs" id="principle">Your Principle Text</p>
+          <label class="form-label block text-gray-700 font-bold mb-2">Public Key:</label>
+          <p class="mb-4 text-xs" id="pubkey">Your Public Key Text</p>
+          <label class="form-label block text-gray-700 font-bold mb-2">Account Abstraction Address:</label>
+          <p class="mb-4 text-xs" id="address">Your Account Abstraction Address Text</p>
+          <button class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
+            Send Account Abstraction Transaction
+          </button>
+        </div>
       </div>
     </main>
     <!-- <div class="modal fixed inset-0 flex items-center justify-center" id="modal">

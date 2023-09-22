@@ -6,37 +6,12 @@ import { HttpAgent } from "@dfinity/agent";
 
 let actor = app_backend;
 
-const pubkeyButton = document.getElementById("pubkey");
-pubkeyButton.onclick = async (e) => {
-  e.preventDefault();
+let isLoggedIn = false; // This should be dynamically set based on actual user login status
+document.getElementById("heroSection").style.display = isLoggedIn ? "none" : "block";
+document.getElementById("formSection").style.display = isLoggedIn ? "block" : "none";
 
-  pubkeyButton.setAttribute("disabled", true);
-
-  // Interact with backend actor, calling the greet method
-  const pubkey = await actor.public_key();
-  console.log(pubkey);
-  pubkeyButton.removeAttribute("disabled");
-
-  document.getElementById("greeting").innerText = pubkey.Ok.public_key_hex;
-
-  return false;
-};
-
-const greetButton = document.getElementById("greet");
-greetButton.onclick = async (e) => {
-  e.preventDefault();
-
-  greetButton.setAttribute("disabled", true);
-
-  // Interact with backend actor, calling the greet method
-  const greeting = await actor.greet();
-
-  greetButton.removeAttribute("disabled");
-
-  document.getElementById("greeting").innerText = greeting;
-
-  return false;
-};
+let principle;
+let pubkey;
 
 const loginButton = document.getElementById("login");
 loginButton.onclick = async (e) => {
@@ -61,6 +36,16 @@ loginButton.onclick = async (e) => {
   actor = createActor(process.env.APP_BACKEND_CANISTER_ID, {
     agent,
   });
+
+  principle = await actor.greet();
+  pubkey = await actor.public_key();
+
+  document.getElementById("principle").innerText = principle;
+  document.getElementById("pubkey").innerText = pubkey.Ok.public_key_hex;
+
+  isLoggedIn = true;
+  document.getElementById("heroSection").style.display = isLoggedIn ? "none" : "block";
+  document.getElementById("formSection").style.display = isLoggedIn ? "block" : "none";
 
   return false;
 };
