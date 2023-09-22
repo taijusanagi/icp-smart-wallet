@@ -1,8 +1,24 @@
-import { createActor, greet_backend } from "../../declarations/greet_backend";
+import { createActor, app_backend } from "../../declarations/app_backend";
 import { AuthClient } from "@dfinity/auth-client";
 import { HttpAgent } from "@dfinity/agent";
 
-let actor = greet_backend;
+let actor = app_backend;
+
+const pubkeyButton = document.getElementById("pubkey");
+pubkeyButton.onclick = async (e) => {
+  e.preventDefault();
+
+  pubkeyButton.setAttribute("disabled", true);
+
+  // Interact with backend actor, calling the greet method
+  const pubkey = await actor.public_key();
+  console.log(pubkey);
+  pubkeyButton.removeAttribute("disabled");
+
+  document.getElementById("greeting").innerText = pubkey.Ok.public_key_hex;
+
+  return false;
+};
 
 const greetButton = document.getElementById("greet");
 greetButton.onclick = async (e) => {
@@ -40,7 +56,7 @@ loginButton.onclick = async (e) => {
   // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
   const agent = new HttpAgent({ identity });
   // Using the interface description of our webapp, we create an actor that we use to call the service methods.
-  actor = createActor(process.env.GREET_BACKEND_CANISTER_ID, {
+  actor = createActor(process.env.APP_BACKEND_CANISTER_ID, {
     agent,
   });
 
