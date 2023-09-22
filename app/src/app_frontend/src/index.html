@@ -9,6 +9,13 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-gradient-to-r from-black to-purple-700 flex flex-col">
+    <div
+      id="loader"
+      style="display: none"
+      class="loader fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="spinner"></div>
+    </div>
     <main class="main-content flex-grow flex items-center justify-center p-2">
       <div id="heroSection" class="hero flex flex-col items-center p-8 text-center">
         <img src="logo.png" alt="Logo" class="mb-4 w-24 h-24 mx-auto" />
@@ -18,7 +25,7 @@
           Connect Internet Identity
         </button>
       </div>
-      <div id="formSection">
+      <div id="formSection" class="w-full max-w-2xl">
         <img src="logo.png" alt="Logo" class="mb-4 w-24 h-24 mx-auto" />
         <h1 class="text-2xl font-bold mb-4 text-white text-center">ICP Smart Wallet</h1>
         <div class="centered-form bg-white p-8 rounded-lg shadow-md">
@@ -28,21 +35,25 @@
           <p class="mb-4 text-xs" id="pubkey">Your Public Key Text</p>
           <label class="form-label block text-gray-700 font-bold mb-2">Account Abstraction Address:</label>
           <p class="mb-4 text-xs" id="address">Your Account Abstraction Address Text</p>
-          <button class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
+          <button id="send" class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
             Send Account Abstraction Transaction
           </button>
         </div>
       </div>
     </main>
-    <!-- <div class="modal fixed inset-0 flex items-center justify-center" id="modal">
-      <div class="modal-content bg-white p-4 rounded-lg shadow-md relative">
+    <div
+      style="display: none"
+      class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      id="modal"
+    >
+      <div class="modal-content bg-white p-8 rounded-lg shadow-2xl relative w-full max-w-2xl">
         <span
-          class="close-btn absolute top-2 right-2 cursor-pointer"
+          class="close-btn cursor-pointer absolute top-4 right-4 text-2xl text-gray-700 hover:text-gray-900"
           onclick="document.getElementById('modal').style.display='none'"
           >&times;</span
         >
-        <p class="modal-text text-gray-700">Modal Content Goes Here</p>
+        <p class="modal-text text-gray-700 text-lg">Modal Content Goes Here</p>
       </div>
-    </div> -->
+    </div>
   </body>
 </html>

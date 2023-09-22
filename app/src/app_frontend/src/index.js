@@ -4,17 +4,33 @@ import { createActor, app_backend } from "../../declarations/app_backend";
 import { AuthClient } from "@dfinity/auth-client";
 import { HttpAgent } from "@dfinity/agent";
 
-let actor = app_backend;
+// Loader
+function showLoader() {
+  document.getElementById("loader").style.display = "flex";
+}
 
+function hideLoader() {
+  document.getElementById("loader").style.display = "none";
+}
+
+function showModal() {
+  document.getElementById("modal").style.display = "flex";
+}
+
+// Auth
 let isLoggedIn = false; // This should be dynamically set based on actual user login status
 document.getElementById("heroSection").style.display = isLoggedIn ? "none" : "block";
 document.getElementById("formSection").style.display = isLoggedIn ? "block" : "none";
+
+// ICP
+let actor = app_backend;
 
 let principle;
 let pubkey;
 
 const loginButton = document.getElementById("login");
 loginButton.onclick = async (e) => {
+  showLoader();
   e.preventDefault();
 
   // create an auth client
@@ -47,5 +63,12 @@ loginButton.onclick = async (e) => {
   document.getElementById("heroSection").style.display = isLoggedIn ? "none" : "block";
   document.getElementById("formSection").style.display = isLoggedIn ? "block" : "none";
 
+  hideLoader();
+  return false;
+};
+
+const sendButton = document.getElementById("send");
+sendButton.onclick = async (e) => {
+  showModal();
   return false;
 };
