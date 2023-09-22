@@ -1,3 +1,5 @@
+import "./style.css";
+
 import { createActor, app_backend } from "../../declarations/app_backend";
 import { AuthClient } from "@dfinity/auth-client";
 import { HttpAgent } from "@dfinity/agent";

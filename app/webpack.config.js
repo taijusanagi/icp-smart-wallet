@@ -78,6 +78,22 @@ module.exports = {
   //    { test: /\.css$/, use: ['style-loader','css-loader'] }
   //  ]
   // },
+  devServer: {
+    contentBase: path.join(__dirname, "dist"), // specify the output directory
+    compress: true, // enable gzip compression
+    port: 9000, // specify the port number
+    hot: true, // enable hot module replacement
+    open: true, // open the browser window on start
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        include: path.resolve(__dirname, "src"),
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
+    ],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, frontend_entry),

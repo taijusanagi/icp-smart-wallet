@@ -11,6 +11,7 @@
   "scripts": {
     "build": "webpack",
     "prebuild": "dfx generate",
+    "prestart": "npm run build",
     "start": "webpack serve --mode development --env development",
     "deploy:local": "dfx deploy --network=local",
     "deploy:ic": "dfx deploy --network=ic",
@@ -27,16 +28,22 @@
     "assert": "2.0.0",
     "buffer": "6.0.3",
     "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
     "dotenv": "^16.0.3",
     "events": "3.3.0",
     "html-webpack-plugin": "5.5.0",
+    "postcss": "^8.4.30",
+    "postcss-loader": "^7.3.3",
+    "postcss-preset-env": "^9.1.4",
     "process": "0.11.10",
     "stream-browserify": "3.0.0",
+    "style-loader": "^3.3.3",
+    "tailwindcss": "^3.3.3",
     "terser-webpack-plugin": "^5.3.3",
     "util": "0.12.4",
-    "webpack": "^5.73.0",
+    "webpack": "^5.88.2",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.8.1"
+    "webpack-dev-server": "^4.15.1"
   },
   "engines": {
     "node": "^12 || ^14 || ^16 || ^18"
