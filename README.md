@@ -37,6 +37,31 @@ ICP Smart Wallet stands out by providing a fully on-chain, networked-custody wal
 - ICP Smart Wallet integrates Internet Identity for secure and seamless user authentication.
 - ICP Smart Wallet incorporates EIP4331 Account Abstraction, which enables the creation of Abstract Wallet Transactions.
 
+## Roadmap
+
+The ICP Smart Wallet aims to continuously evolve and adapt to the dynamic landscape of blockchain technology. Our roadmap reflects our vision for the future and our commitment to creating a robust and user-friendly platform. Here's a glimpse of our planned milestones:
+
+### **1. Demo in Fully On-Chain with ICP Hackathon**
+
+- **Objective**: Showcase the initial capabilities of the ICP Smart Wallet in a real-world setting and gather feedback from the community.
+
+### **2. Publish Beta App**
+
+- **Objective**: Launch a preliminary version of the ICP Smart Wallet to a limited audience for testing and further refinement.
+
+### **3. Adding Functionality Like Multichain Support**
+
+- **Objective**: Enhance the wallet's capabilities by supporting multiple blockchains, thus increasing interoperability and expanding the user base.
+
+### **4. Develop More Account Abstraction Infrastructure**
+
+- **Objective**: Elevate the ICP Smart Wallet's capabilities in the Account Abstraction realm by adding advanced infrastructures.
+- **Components**:
+  - **Fully-Onchain Verifying Paymaster**: Ensure that paymasters can verify transactions entirely on-chain for added security and efficiency.
+  - **Bundler**: A system to package multiple transactions together, optimizing network resource utilization and costs.
+
+We remain committed to our community and will regularly update our roadmap based on the feedback received and the evolving needs of our users. Stay tuned for more exciting developments in the journey of the ICP Smart Wallet!
+
 ## Run
 
 ### Local
