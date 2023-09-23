@@ -12,6 +12,21 @@ const SIMPLE_ACCOUNT_FACTORY_ADDRESS = "0x9406Cc6185a346906296840746125a0E449764
 const BUNDLER_URL = "https://api.stackup.sh/v1/node/c589455678a18f482e3ec75a2e226eeed6294e928c175558410543de304165c6";
 const CHAIN_ID = 5;
 
+import { Core } from "@walletconnect/core";
+import { Web3Wallet } from "@walletconnect/web3wallet";
+
+const SESSION_REQUEST_SEND_TRANSACTION = "eth_sendTransaction";
+const SESSION_REQUEST_ETH_SIGN = "eth_sign";
+const SESSION_REQUEST_PERSONAL_SIGN = "personal_sign";
+const SESSION_REQUEST_ETH_SIGN_V4 = "eth_signTypedData_v4";
+let web3wallet;
+let topic;
+let id;
+
+let to;
+let data;
+let value;
+
 // Loader
 function showLoader() {
   document.getElementById("loader").style.display = "flex";
@@ -23,6 +38,10 @@ function hideLoader() {
 
 function showModal() {
   document.getElementById("modal").style.display = "flex";
+}
+
+function hideModal() {
+  document.getElementById("modal").style.display = "none";
 }
 
 // Auth
@@ -82,7 +101,6 @@ loginButton.onclick = async (e) => {
         const recoveredPublicKey = ethers.utils.recoverPublicKey(prefixedMessageHashBytes, splitedSignature);
         const recoveredAddress = ethers.utils.computeAddress(recoveredPublicKey);
         if (recoveredAddress === computedAddress) {
-          console.log("signature", `0x${signature}${splitedSignature.v.toString(16)}`);
           return `0x${signature}${splitedSignature.v.toString(16)}`;
         }
       }
@@ -102,6 +120,65 @@ loginButton.onclick = async (e) => {
   const bigNumberBalance = await provider.getBalance(accountAbstractionAddress);
   balance = ethers.utils.formatEther(bigNumberBalance);
 
+  const metadata = {
+    name: "ICP Smart Wallet",
+    description: "Account Abstraction Wallet with Threshold ECDSA on ICP",
+    url: "http://localhost:3000",
+    icons: [],
+  };
+  const core = new Core({
+    projectId: "cffe9608a02c00c7947b9afd9dacbc70",
+  });
+  web3wallet = await Web3Wallet.init({
+    core,
+    metadata,
+  });
+  web3wallet.on("session_proposal", async (proposal) => {
+    const session = await web3wallet.approveSession({
+      id: proposal.id,
+      namespaces: {
+        eip155: {
+          chains: ["eip155:5"],
+          methods: [
+            SESSION_REQUEST_SEND_TRANSACTION,
+            SESSION_REQUEST_ETH_SIGN,
+            SESSION_REQUEST_PERSONAL_SIGN,
+            SESSION_REQUEST_ETH_SIGN_V4,
+          ],
+          events: ["chainChanged", "accountsChanged"],
+          accounts: [`eip155:5:${accountAbstractionAddress}`],
+        },
+      },
+    });
+    const isConnected = true;
+    topic = session.topic;
+    document.getElementById("notConnectedSection").style.display = isConnected ? "none" : "block";
+    document.getElementById("connectedSection").style.display = isConnected ? "block" : "none";
+  });
+  web3wallet.on("session_request", async (request) => {
+    if (request.params.request.method === "eth_sendTransaction") {
+      id = request.id;
+      to = request.params.request.params[0].to;
+      data = request.params.request.params[0].data;
+      value = request.params.request.params[0].value;
+      document.getElementById("to").innerText = to;
+      document.getElementById("data").innerText = data;
+      document.getElementById("value").innerText = ethers.utils.formatEther(ethers.BigNumber.from(value)) + " ETH";
+      document.getElementById("entryPoint").innerText = ENTRY_POINT_ADDRESS;
+      document.getElementById("bundlerURL").innerText = BUNDLER_URL;
+      showModal();
+    } else {
+      console.log("Not supported method", request.params.request.method);
+    }
+  });
+  const sessions = await web3wallet.getActiveSessions();
+  const isConnected = Object.keys(sessions).length > 0;
+  if (isConnected) {
+    topic = Object.keys(sessions)[0];
+  }
+  document.getElementById("notConnectedSection").style.display = isConnected ? "none" : "block";
+  document.getElementById("connectedSection").style.display = isConnected ? "block" : "none";
+
   document.getElementById("principle").innerText = principle;
   document.getElementById("publicKey").innerText = publicKey;
   document.getElementById("computedAddress").innerText = computedAddress;
@@ -116,24 +193,47 @@ loginButton.onclick = async (e) => {
   return false;
 };
 
-const sendButton = document.getElementById("send");
-sendButton.onclick = async (e) => {
-  showModal();
+const connectButton = document.getElementById("connect");
+connectButton.onclick = async (e) => {
+  await web3wallet.core.pairing.pair({
+    uri: document.getElementById("url").value,
+  });
+
+  return false;
+};
+
+const disconnectButton = document.getElementById("disconnect");
+disconnectButton.onclick = async (e) => {
+  await web3wallet.disconnectSession({ topic });
+  const isConnected = false;
+  topic = "";
+  document.getElementById("notConnectedSection").style.display = isConnected ? "none" : "block";
+  document.getElementById("connectedSection").style.display = isConnected ? "block" : "none";
   return false;
 };
 
 const confirmButton = document.getElementById("confirm");
 confirmButton.onclick = async (e) => {
-  const unsignedUserOp = await walletAPI.createUnsignedUserOp({
-    target: ethers.constants.AddressZero,
-    data: "0x",
-  });
-  unsignedUserOp.preVerificationGas = 500000;
-  const resolvedUnsignedUserOp = await ethers.utils.resolveProperties(unsignedUserOp);
-  const signedUserOp = await walletAPI.signUserOp(resolvedUnsignedUserOp);
-  const resolvedSignedUserOp = await ethers.utils.resolveProperties(signedUserOp);
-  const httpRPCClient = new HttpRpcClient(BUNDLER_URL, ENTRY_POINT_ADDRESS, CHAIN_ID);
-  const result = await httpRPCClient.sendUserOpToBundler(resolvedSignedUserOp);
-  console.log("result", result);
-  console.log("confirmButton clicked");
+  showLoader();
+  try {
+    const unsignedUserOp = await walletAPI.createUnsignedUserOp({
+      target: to,
+      data,
+      value,
+    });
+    unsignedUserOp.preVerificationGas = 500000;
+    const resolvedUnsignedUserOp = await ethers.utils.resolveProperties(unsignedUserOp);
+    const signedUserOp = await walletAPI.signUserOp(resolvedUnsignedUserOp);
+    const resolvedSignedUserOp = await ethers.utils.resolveProperties(signedUserOp);
+    const httpRPCClient = new HttpRpcClient(BUNDLER_URL, ENTRY_POINT_ADDRESS, CHAIN_ID);
+    const result = await httpRPCClient.sendUserOpToBundler(resolvedSignedUserOp);
+    const response = { id, result, jsonrpc: "2.0" };
+    await web3wallet.respondSessionRequest({ topic, response });
+    console.log("result", result);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    hideModal();
+    hideLoader();
+  }
 };

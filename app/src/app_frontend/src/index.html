@@ -9,13 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-gradient-to-r from-black to-purple-700 flex flex-col break-all">
-    <div
-      id="loader"
-      style="display: none"
-      class="loader fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-    >
-      <div class="spinner"></div>
-    </div>
     <main class="main-content flex-grow flex items-center justify-center p-2">
       <div id="heroSection" class="hero flex flex-col items-center p-8 text-center">
         <img src="logo.png" alt="Logo" class="mb-4 w-24 h-24 mx-auto" />
@@ -29,19 +22,31 @@
         <img src="logo.png" alt="Logo" class="mb-4 w-24 h-24 mx-auto" />
         <h1 class="text-2xl font-bold mb-4 text-white text-center">ICP Smart Wallet</h1>
         <div class="centered-form bg-white p-4 rounded-lg shadow-md">
-          <label class="form-label block text-gray-700 font-bold mb-2">Owner Principle:</label>
+          <label class="form-label block text-gray-700 font-bold mb-2">Owner Principle</label>
           <p class="mb-4 text-xs" id="principle">Your Principle Text</p>
-          <label class="form-label block text-gray-700 font-bold mb-2">Owner Public Key from Principle:</label>
+          <label class="form-label block text-gray-700 font-bold mb-2">Owner Public Key from Principle</label>
           <p class="mb-4 text-xs" id="publicKey">Your Public Key Text</p>
-          <label class="form-label block text-gray-700 font-bold mb-2">Owner Address from Public key:</label>
+          <label class="form-label block text-gray-700 font-bold mb-2">Owner Address from Public key</label>
           <p class="mb-4 text-xs" id="computedAddress">Your Address Text</p>
-          <label class="form-label block text-gray-700 font-bold mb-2">Account Abstraction Address:</label>
+          <label class="form-label block text-gray-700 font-bold mb-2">Account Abstraction Address</label>
           <p class="mb-4 text-xs" id="accountAbstractionAddress">Your Account Abstraction Address Text</p>
-          <label class="form-label block text-gray-700 font-bold mb-2">Balance:</label>
+          <label class="form-label block text-gray-700 font-bold mb-2">Balance</label>
           <p class="mb-4 text-xs" id="balance">Your Balance Text</p>
-          <button id="send" class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
-            Send Account Abstraction Transaction
-          </button>
+          <label class="form-label block text-gray-700 font-bold mb-2">Wallet Connect URL</label>
+          <div id="notConnectedSection" style="display: none">
+            <input type="text" id="url" class="py-3 px-2 mb-4 w-full border rounded-lg text-xs" placeholder="wc:" />
+            <button id="connect" class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
+              Connect dApps with Wallet Connect
+            </button>
+          </div>
+          <div id="connectedSection" style="display: none">
+            <button
+              id="disconnect"
+              class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600"
+            >
+              Disconnect
+            </button>
+          </div>
         </div>
       </div>
     </main>
@@ -57,15 +62,33 @@
           >&times;</span
         >
         <div>
-          <p class="modal-text text-gray-700 font-bold mb-4">Confirm Tx</p>
-          <pre class="p-2 rounded border border-gray-200 bg-gray-50 overflow-x-auto overflow-y-auto max-h-60 mb-4">
-            <code id="preview" class="break-all"></code>
-          </pre>
+          <p class="modal-text text-gray-700 font-bold mb-4">Confirm Account Abstraction Tx</p>
+          <div
+            class="p-2 rounded border border-gray-200 bg-gray-50 max-h-80 mb-4 text-xs overflow-x-auto overflow-y-auto"
+          >
+            <label class="form-label block text-gray-700 font-bold mb-1">To</label>
+            <p id="to" class="mb-2"></p>
+            <label class="form-label block text-gray-700 font-bold mb-1">Data</label>
+            <p id="data" class="mb-2"></p>
+            <label class="form-label block text-gray-700 font-bold mb-1">Value</label>
+            <p id="value" class="mb-2"></p>
+            <label class="form-label block text-gray-700 font-bold mb-1">Entry Point</label>
+            <p id="entryPoint" class="mb-2"></p>
+            <label class="form-label block text-gray-700 font-bold mb-1">Bundler URL</label>
+            <p id="bundlerURL" class="mb-2"></p>
+          </div>
           <button id="confirm" class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
             Send Account Abstraction Transaction
           </button>
         </div>
       </div>
+    </div>
+    <div
+      id="loader"
+      style="display: none"
+      class="loader fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="spinner"></div>
     </div>
   </body>
 </html>
