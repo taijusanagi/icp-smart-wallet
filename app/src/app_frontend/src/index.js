@@ -29,7 +29,8 @@ document.getElementById("formSection").style.display = isLoggedIn ? "block" : "n
 let actor = app_backend;
 
 let principle;
-let pubkey;
+let publicKey;
+let computedAddress;
 
 const loginButton = document.getElementById("login");
 loginButton.onclick = async (e) => {
@@ -57,14 +58,14 @@ loginButton.onclick = async (e) => {
   });
 
   principle = await actor.greet();
-  const pubkeyRes = await actor.public_key();
-  pubkey = pubkeyRes.Ok.public_key_hex;
-  console.log("pubkey", pubkey);
-  // const publicKey = new Uint8Array(Buffer.from(pubkey, "hex"));
+  const publicKeyRes = await actor.public_key();
+  publicKey = `0x${publicKeyRes.Ok.public_key_hex}`;
+  console.log("publicKey", publicKey);
+  computedAddress = ethers.utils.computeAddress(publicKey);
 
   document.getElementById("principle").innerText = principle;
-  document.getElementById("pubkey").innerText = pubkey;
-  document.getElementById("address").innerText = ethers.utils.computeAddress(`0x${pubkey}`);
+  document.getElementById("publicKey").innerText = publicKey;
+  document.getElementById("computedAddress").innerText = computedAddress;
 
   // Signature test for debug
   const message = "message";
