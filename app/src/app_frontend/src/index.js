@@ -4,6 +4,9 @@ import { createActor, app_backend } from "../../declarations/app_backend";
 import { AuthClient } from "@dfinity/auth-client";
 import { HttpAgent } from "@dfinity/agent";
 
+import { ethers } from "ethers";
+const crypto = require("crypto");
+
 // Loader
 function showLoader() {
   document.getElementById("loader").style.display = "flex";
@@ -54,10 +57,29 @@ loginButton.onclick = async (e) => {
   });
 
   principle = await actor.greet();
-  pubkey = await actor.public_key();
+  const pubkeyRes = await actor.public_key();
+  pubkey = pubkeyRes.Ok.public_key_hex;
+  console.log("pubkey", pubkey);
+  // const publicKey = new Uint8Array(Buffer.from(pubkey, "hex"));
 
   document.getElementById("principle").innerText = principle;
-  document.getElementById("pubkey").innerText = pubkey.Ok.public_key_hex;
+  document.getElementById("pubkey").innerText = pubkey;
+  document.getElementById("address").innerText = ethers.utils.computeAddress(`0x${pubkey}`);
+
+  // Signature test for debug
+  const message = "message";
+  const signRes = await actor.sign(message);
+  const signature = signRes.Ok.signature_hex;
+  console.log("signature", signature);
+  const splitedSignature = ethers.utils.splitSignature(Buffer.from(signature, "hex"));
+  console.log("splitedSignature", splitedSignature);
+  const recoveredPublicKey = ethers.utils.recoverPublicKey(
+    crypto.createHash("sha256").update(message, "utf-8").digest(),
+    splitedSignature
+  );
+  console.log("recoveredPublicKey", recoveredPublicKey);
+  const recoveredAddress = ethers.utils.computeAddress(recoveredPublicKey);
+  console.log("recoveredAddress", recoveredAddress);
 
   isLoggedIn = true;
   document.getElementById("heroSection").style.display = isLoggedIn ? "none" : "block";

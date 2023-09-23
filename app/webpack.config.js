@@ -60,6 +60,7 @@ module.exports = {
       events: require.resolve("events/"),
       stream: require.resolve("stream-browserify/"),
       util: require.resolve("util/"),
+      crypto: require.resolve("crypto-browserify"),
     },
   },
   output: {
@@ -78,13 +79,16 @@ module.exports = {
   //    { test: /\.css$/, use: ['style-loader','css-loader'] }
   //  ]
   // },
-  devServer: {
-    contentBase: path.join(__dirname, "dist"), // specify the output directory
-    compress: true, // enable gzip compression
-    port: 9000, // specify the port number
-    hot: true, // enable hot module replacement
-    open: true, // open the browser window on start
-  },
+  // devServer: {
+  //   static: {
+  //     directory: path.resolve(__dirname, "dist"),
+  //   },
+  //   port: 3000,
+  //   open: true,
+  //   hot: true,
+  //   compress: true,
+  //   historyApiFallback: true,
+  // },
   module: {
     rules: [
       {

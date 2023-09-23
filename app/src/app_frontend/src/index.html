@@ -6,7 +6,7 @@
     <title>ICP Smart Wallet</title>
     <base href="/" />
     <link rel="icon" href="favicon.ico" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" /> -->
   </head>
   <body class="min-h-screen bg-gradient-to-r from-black to-purple-700 flex flex-col">
     <div
@@ -31,8 +31,10 @@
         <div class="centered-form bg-white p-8 rounded-lg shadow-md">
           <label class="form-label block text-gray-700 font-bold mb-2">Principle:</label>
           <p class="mb-4 text-xs" id="principle">Your Principle Text</p>
-          <label class="form-label block text-gray-700 font-bold mb-2">Public Key:</label>
+          <label class="form-label block text-gray-700 font-bold mb-2">Public Key from Principle:</label>
           <p class="mb-4 text-xs" id="pubkey">Your Public Key Text</p>
+          <label class="form-label block text-gray-700 font-bold mb-2">Address from Public key:</label>
+          <p class="mb-4 text-xs" id="address">Your Address Text</p>
           <label class="form-label block text-gray-700 font-bold mb-2">Account Abstraction Address:</label>
           <p class="mb-4 text-xs" id="address">Your Account Abstraction Address Text</p>
           <button id="send" class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">

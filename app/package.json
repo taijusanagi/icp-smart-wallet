@@ -11,7 +11,6 @@
   "scripts": {
     "build": "webpack",
     "prebuild": "dfx generate",
-    "prestart": "npm run build",
     "start": "webpack serve --mode development --env development",
     "deploy:local": "dfx deploy --network=local",
     "deploy:ic": "dfx deploy --network=ic",
@@ -20,7 +19,9 @@
   "dependencies": {
     "@dfinity/agent": "^0.19.2",
     "@dfinity/candid": "^0.19.2",
-    "@dfinity/principal": "^0.19.2"
+    "@dfinity/principal": "^0.19.2",
+    "crypto-browserify": "^3.12.0",
+    "ethers": "^5.7.2"
   },
   "devDependencies": {
     "@dfinity/auth-client": "^0.19.2",
