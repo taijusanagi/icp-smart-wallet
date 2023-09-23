@@ -5,7 +5,10 @@ import { AuthClient } from "@dfinity/auth-client";
 import { HttpAgent } from "@dfinity/agent";
 
 import { ethers } from "ethers";
-const crypto = require("crypto");
+
+import { SimpleAccountAPI, HttpRpcClient } from "@account-abstraction/sdk";
+export const ENTRY_POINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
+export const SIMPLE_ACCOUNT_FACTORY_ADDRESS = "0x9406Cc6185a346906296840746125a0E44976454";
 
 // Loader
 function showLoader() {
@@ -31,6 +34,7 @@ let actor = app_backend;
 let principle;
 let publicKey;
 let computedAddress;
+let accountAbstractionAddress;
 
 const loginButton = document.getElementById("login");
 loginButton.onclick = async (e) => {
@@ -60,27 +64,51 @@ loginButton.onclick = async (e) => {
   principle = await actor.greet();
   const publicKeyRes = await actor.public_key();
   publicKey = `0x${publicKeyRes.Ok.public_key_hex}`;
-  console.log("publicKey", publicKey);
   computedAddress = ethers.utils.computeAddress(publicKey);
+
+  const owner = {
+    getAddress: async () => computedAddress,
+    signMessage: async (message) => {
+      for (let i = 0; i < 100; i++) {
+        const signRes = await actor.sign(message);
+        const signature = signRes.Ok.signature_hex;
+        const splitedSignature = ethers.utils.splitSignature(Buffer.from(signature, "hex"));
+        const recoveredPublicKey = ethers.utils.recoverPublicKey(messageHashBytes, splitedSignature);
+        const recoveredAddress = ethers.utils.computeAddress(recoveredPublicKey);
+        if (recoveredAddress === computedAddress) {
+          console.log("Address check is true.");
+          return splitedSignature;
+        }
+        if (i < 99) {
+          console.log("Retrying...", i + 1);
+        }
+      }
+      console.error("Address check failed after 100 attempts.");
+    },
+  };
+
+  // debug
+  // const message = "message";
+  // const messageHash = ethers.utils.hashMessage(message);
+  // console.log("messageHash", messageHash);
+  // const messageHashBytes = ethers.utils.arrayify(messageHash);
+  // console.log("messageHashBytes", messageHashBytes);
+  // await owner.signMessage(messageHashBytes);
+
+  const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/eth_goerli");
+  const walletAPI = new SimpleAccountAPI({
+    provider,
+    entryPointAddress: ENTRY_POINT_ADDRESS,
+    owner,
+    factoryAddress: SIMPLE_ACCOUNT_FACTORY_ADDRESS,
+  });
+
+  accountAbstractionAddress = await walletAPI.getAccountAddress();
 
   document.getElementById("principle").innerText = principle;
   document.getElementById("publicKey").innerText = publicKey;
   document.getElementById("computedAddress").innerText = computedAddress;
-
-  // Signature test for debug
-  const message = "message";
-  const signRes = await actor.sign(message);
-  const signature = signRes.Ok.signature_hex;
-  console.log("signature", signature);
-  const splitedSignature = ethers.utils.splitSignature(Buffer.from(signature, "hex"));
-  console.log("splitedSignature", splitedSignature);
-  const recoveredPublicKey = ethers.utils.recoverPublicKey(
-    crypto.createHash("sha256").update(message, "utf-8").digest(),
-    splitedSignature
-  );
-  console.log("recoveredPublicKey", recoveredPublicKey);
-  const recoveredAddress = ethers.utils.computeAddress(recoveredPublicKey);
-  console.log("recoveredAddress", recoveredAddress);
+  document.getElementById("accountAbstractionAddress").innerText = accountAbstractionAddress;
 
   isLoggedIn = true;
   document.getElementById("heroSection").style.display = isLoggedIn ? "none" : "block";
