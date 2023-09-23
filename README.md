@@ -55,10 +55,10 @@ The ICP Smart Wallet aims to continuously evolve and adapt to the dynamic landsc
 
 ### **4. Develop More Account Abstraction Infrastructure**
 
-- **Objective**: Elevate the ICP Smart Wallet's capabilities in the Account Abstraction realm by adding advanced infrastructures.
+- **Objective**: Elevate the ICP Smart Wallet's capabilities in the Account Abstraction realm by adding advanced infrastructures using IPC full-onchain functionality.
 - **Components**:
-  - **Fully-Onchain Verifying Paymaster**: Ensure that paymasters can verify transactions entirely on-chain for added security and efficiency.
-  - **Bundler**: A system to package multiple transactions together, optimizing network resource utilization and costs.
+  - **Fully-Onchain Verifying Paymaster**: Fully-onchain version of EIP4331 verifying paymaster.
+  - **Bundler**: Fully-onchain version of EIP4331 bundler.
 
 We remain committed to our community and will regularly update our roadmap based on the feedback received and the evolving needs of our users. Stay tuned for more exciting developments in the journey of the ICP Smart Wallet!
 
