@@ -7,8 +7,10 @@ import { HttpAgent } from "@dfinity/agent";
 import { ethers } from "ethers";
 
 import { SimpleAccountAPI, HttpRpcClient } from "@account-abstraction/sdk";
-export const ENTRY_POINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
-export const SIMPLE_ACCOUNT_FACTORY_ADDRESS = "0x9406Cc6185a346906296840746125a0E44976454";
+const ENTRY_POINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
+const SIMPLE_ACCOUNT_FACTORY_ADDRESS = "0x9406Cc6185a346906296840746125a0E44976454";
+const BUNDLER_URL = "https://api.stackup.sh/v1/node/c589455678a18f482e3ec75a2e226eeed6294e928c175558410543de304165c6";
+const CHAIN_ID = 5;
 
 // Loader
 function showLoader() {
@@ -34,7 +36,9 @@ let actor = app_backend;
 let principle;
 let publicKey;
 let computedAddress;
+let walletAPI;
 let accountAbstractionAddress;
+let balance;
 
 const loginButton = document.getElementById("login");
 loginButton.onclick = async (e) => {
@@ -70,45 +74,39 @@ loginButton.onclick = async (e) => {
     getAddress: async () => computedAddress,
     signMessage: async (message) => {
       for (let i = 0; i < 100; i++) {
-        const signRes = await actor.sign(message);
+        const prefixedMessageHash = ethers.utils.hashMessage(message);
+        const prefixedMessageHashBytes = ethers.utils.arrayify(prefixedMessageHash);
+        const signRes = await actor.sign(prefixedMessageHashBytes);
         const signature = signRes.Ok.signature_hex;
         const splitedSignature = ethers.utils.splitSignature(Buffer.from(signature, "hex"));
-        const recoveredPublicKey = ethers.utils.recoverPublicKey(messageHashBytes, splitedSignature);
+        const recoveredPublicKey = ethers.utils.recoverPublicKey(prefixedMessageHashBytes, splitedSignature);
         const recoveredAddress = ethers.utils.computeAddress(recoveredPublicKey);
         if (recoveredAddress === computedAddress) {
-          console.log("Address check is true.");
-          return splitedSignature;
-        }
-        if (i < 99) {
-          console.log("Retrying...", i + 1);
+          console.log("signature", `0x${signature}${splitedSignature.v.toString(16)}`);
+          return `0x${signature}${splitedSignature.v.toString(16)}`;
         }
       }
       console.error("Address check failed after 100 attempts.");
     },
   };
 
-  // debug
-  // const message = "message";
-  // const messageHash = ethers.utils.hashMessage(message);
-  // console.log("messageHash", messageHash);
-  // const messageHashBytes = ethers.utils.arrayify(messageHash);
-  // console.log("messageHashBytes", messageHashBytes);
-  // await owner.signMessage(messageHashBytes);
-
   const provider = new ethers.providers.JsonRpcProvider("https://rpc.ankr.com/eth_goerli");
-  const walletAPI = new SimpleAccountAPI({
+  walletAPI = new SimpleAccountAPI({
     provider,
     entryPointAddress: ENTRY_POINT_ADDRESS,
     owner,
     factoryAddress: SIMPLE_ACCOUNT_FACTORY_ADDRESS,
   });
-
   accountAbstractionAddress = await walletAPI.getAccountAddress();
+  walletAPI.accountAddress = accountAbstractionAddress;
+  const bigNumberBalance = await provider.getBalance(accountAbstractionAddress);
+  balance = ethers.utils.formatEther(bigNumberBalance);
 
   document.getElementById("principle").innerText = principle;
   document.getElementById("publicKey").innerText = publicKey;
   document.getElementById("computedAddress").innerText = computedAddress;
   document.getElementById("accountAbstractionAddress").innerText = accountAbstractionAddress;
+  document.getElementById("balance").innerText = balance + " ETH";
 
   isLoggedIn = true;
   document.getElementById("heroSection").style.display = isLoggedIn ? "none" : "block";
@@ -122,4 +120,20 @@ const sendButton = document.getElementById("send");
 sendButton.onclick = async (e) => {
   showModal();
   return false;
+};
+
+const confirmButton = document.getElementById("confirm");
+confirmButton.onclick = async (e) => {
+  const unsignedUserOp = await walletAPI.createUnsignedUserOp({
+    target: ethers.constants.AddressZero,
+    data: "0x",
+  });
+  unsignedUserOp.preVerificationGas = 500000;
+  const resolvedUnsignedUserOp = await ethers.utils.resolveProperties(unsignedUserOp);
+  const signedUserOp = await walletAPI.signUserOp(resolvedUnsignedUserOp);
+  const resolvedSignedUserOp = await ethers.utils.resolveProperties(signedUserOp);
+  const httpRPCClient = new HttpRpcClient(BUNDLER_URL, ENTRY_POINT_ADDRESS, CHAIN_ID);
+  const result = await httpRPCClient.sendUserOpToBundler(resolvedSignedUserOp);
+  console.log("result", result);
+  console.log("confirmButton clicked");
 };

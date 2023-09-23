@@ -6,9 +6,9 @@
     <title>ICP Smart Wallet</title>
     <base href="/" />
     <link rel="icon" href="favicon.ico" />
-    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" /> -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   </head>
-  <body class="min-h-screen bg-gradient-to-r from-black to-purple-700 flex flex-col">
+  <body class="min-h-screen bg-gradient-to-r from-black to-purple-700 flex flex-col break-all">
     <div
       id="loader"
       style="display: none"
@@ -25,18 +25,20 @@
           Connect Internet Identity
         </button>
       </div>
-      <div id="formSection" class="w-full max-w-2xl">
+      <div id="formSection" class="w-full max-w-lg">
         <img src="logo.png" alt="Logo" class="mb-4 w-24 h-24 mx-auto" />
         <h1 class="text-2xl font-bold mb-4 text-white text-center">ICP Smart Wallet</h1>
-        <div class="centered-form bg-white p-8 rounded-lg shadow-md">
-          <label class="form-label block text-gray-700 font-bold mb-2">Principle:</label>
+        <div class="centered-form bg-white p-4 rounded-lg shadow-md">
+          <label class="form-label block text-gray-700 font-bold mb-2">Owner Principle:</label>
           <p class="mb-4 text-xs" id="principle">Your Principle Text</p>
-          <label class="form-label block text-gray-700 font-bold mb-2">Public Key from Principle:</label>
+          <label class="form-label block text-gray-700 font-bold mb-2">Owner Public Key from Principle:</label>
           <p class="mb-4 text-xs" id="publicKey">Your Public Key Text</p>
-          <label class="form-label block text-gray-700 font-bold mb-2">Address from Public key:</label>
+          <label class="form-label block text-gray-700 font-bold mb-2">Owner Address from Public key:</label>
           <p class="mb-4 text-xs" id="computedAddress">Your Address Text</p>
           <label class="form-label block text-gray-700 font-bold mb-2">Account Abstraction Address:</label>
           <p class="mb-4 text-xs" id="accountAbstractionAddress">Your Account Abstraction Address Text</p>
+          <label class="form-label block text-gray-700 font-bold mb-2">Balance:</label>
+          <p class="mb-4 text-xs" id="balance">Your Balance Text</p>
           <button id="send" class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
             Send Account Abstraction Transaction
           </button>
@@ -45,16 +47,21 @@
     </main>
     <div
       style="display: none"
-      class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2"
       id="modal"
     >
-      <div class="modal-content bg-white p-8 rounded-lg shadow-2xl relative w-full max-w-2xl">
+      <div class="modal-content bg-white p-4 rounded-lg shadow-2xl relative w-full max-w-lg">
         <span
-          class="close-btn cursor-pointer absolute top-4 right-4 text-2xl text-gray-700 hover:text-gray-900"
+          class="close-btn cursor-pointer absolute top-2 right-4 text-2xl text-gray-700 hover:text-gray-900"
           onclick="document.getElementById('modal').style.display='none'"
           >&times;</span
         >
-        <p class="modal-text text-gray-700 text-lg">Modal Content Goes Here</p>
+        <div>
+          <p class="modal-text text-gray-700 font-bold mb-4">Confirm Tx</p>
+          <button id="confirm" class="btn w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600">
+            Send Account Abstraction Transaction
+          </button>
+        </div>
       </div>
     </div>
   </body>
