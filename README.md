@@ -6,7 +6,7 @@ Account Abstraction Wallet with Threshold ECDSA on ICP
 
 ## Live App
 
-Coming Soon!
+https://icp-smart-wallet.vercel.app/
 
 ## Pitch Deck
 
