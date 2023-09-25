@@ -6,7 +6,13 @@ Account Abstraction Wallet with Threshold ECDSA on ICP
 
 ## Live App
 
+### Frontend
+
 https://icp-smart-wallet.vercel.app/
+
+### Backend
+
+https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/?id=difti-nqaaa-aaaam-abtua-cai
 
 ## Pitch Deck
 

@@ -122,16 +122,16 @@ module.exports = {
           to: ".ic-assets.json5",
           noErrorOnMissing: true,
         },
-        {
-          from: `src/${frontendDirectory}/assets/logo.png`,
-          to: "logo.png",
-          noErrorOnMissing: true,
-        },
-        {
-          from: `src/${frontendDirectory}/assets/favicon.ico`,
-          to: "favicon.ico",
-          noErrorOnMissing: true,
-        },
+        // {
+        //   from: `src/${frontendDirectory}/assets/logo.png`,
+        //   to: "logo.png",
+        //   noErrorOnMissing: true,
+        // },
+        // {
+        //   from: `src/${frontendDirectory}/assets/favicon.ico`,
+        //   to: "favicon.ico",
+        //   noErrorOnMissing: true,
+        // },
       ],
     }),
   ],
