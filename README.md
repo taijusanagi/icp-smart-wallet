@@ -20,7 +20,7 @@ https://docs.google.com/presentation/d/1wv1TmWFZgZKoA_dmFPBojh6jeQtdwUpE3RRmwsWI
 
 ## Video Demo
 
-Coming Soon!
+https://youtu.be/a2l7HdlRKjk
 
 ## Description
 
