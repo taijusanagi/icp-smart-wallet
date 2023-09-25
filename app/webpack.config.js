@@ -5,6 +5,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
 const network = process.env.DFX_NETWORK || (process.env.NODE_ENV === "production" ? "ic" : "local");
+console.log("network", network);
 function initCanisterEnv() {
   let localCanisters, prodCanisters;
   try {
@@ -34,6 +35,8 @@ const internetIdentityUrl =
   network === "local"
     ? `http://localhost:4943/?canisterId=${canisterEnvVariables["INTERNET_IDENTITY_CANISTER_ID"]}`
     : `https://identity.ic0.app`;
+
+console.log("internetIdentityUrl", internetIdentityUrl);
 
 const frontendDirectory = "app_frontend";
 
@@ -119,6 +122,16 @@ module.exports = {
           to: ".ic-assets.json5",
           noErrorOnMissing: true,
         },
+        {
+          from: `src/${frontendDirectory}/assets/logo.png`,
+          to: "logo.png",
+          noErrorOnMissing: true,
+        },
+        {
+          from: `src/${frontendDirectory}/assets/favicon.ico`,
+          to: "favicon.ico",
+          noErrorOnMissing: true,
+        },
       ],
     }),
   ],
@@ -127,7 +140,7 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:4943",
+        target: network === "local" ? "http://127.0.0.1:4943" : "https://identity.ic0.app",
         changeOrigin: true,
         pathRewrite: {
           "^/api": "/api",

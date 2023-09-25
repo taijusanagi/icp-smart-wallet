@@ -10,7 +10,7 @@ Coming Soon!
 
 ## Pitch Deck
 
-Coming Soon!
+https://docs.google.com/presentation/d/1wv1TmWFZgZKoA_dmFPBojh6jeQtdwUpE3RRmwsWI1Qc/edit?usp=sharing
 
 ## Video Demo
 
@@ -65,6 +65,17 @@ We remain committed to our community and will regularly update our roadmap based
 ## Run
 
 ### Local
+
+Please replace key in main.mo as follows
+
+```
+dfx_test_key  // local
+test_key_1    // mainnet
+```
+
+This is instructed [here](https://discord.com/channels/748416164832608337/956466775380336680/1149386548253573122)
+
+Then run the following commands.
 
 ```
 cd app

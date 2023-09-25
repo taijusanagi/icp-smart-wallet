@@ -32,7 +32,7 @@ actor {
       let { public_key } = await ic.ecdsa_public_key({
           canister_id = null;
           derivation_path = [ caller ];
-          key_id = { curve = #secp256k1; name = "dfx_test_key" };
+          key_id = { curve = #secp256k1; name = "test_key_1" };
       });
       #Ok({ public_key_hex = Hex.encode(Blob.toArray(public_key)) })
     } catch (err) {
@@ -49,7 +49,7 @@ actor {
       let { signature } = await ic.sign_with_ecdsa({
           message_hash;
           derivation_path = [ caller ];
-          key_id = { curve = #secp256k1; name = "dfx_test_key" };
+          key_id = { curve = #secp256k1; name = "test_key_1" };
       });
       #Ok({ signature_hex = Hex.encode(Blob.toArray(signature))})
     } catch (err) {

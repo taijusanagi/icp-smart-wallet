@@ -75,6 +75,8 @@ loginButton.onclick = async (e) => {
     });
   });
 
+  console.log("APP_BACKEND_CANISTER_ID", process.env.APP_BACKEND_CANISTER_ID);
+
   // At this point we're authenticated, and we can get the identity from the auth client:
   const identity = authClient.getIdentity();
   // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
